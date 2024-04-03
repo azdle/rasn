@@ -16,6 +16,61 @@ pub enum Pdus {
     Report(Report),
 }
 
+impl Pdus {
+    pub fn is_read_class(&self) -> bool {
+        match self {
+            Pdus::GetRequest(_) | Pdus::GetNextRequest(_) | Pdus::GetBulkRequest(_) => true,
+            _ => false,
+        }
+    }
+
+    pub fn is_write_class(&self) -> bool {
+        match self {
+            Pdus::SetRequest(_) => true,
+            _ => false,
+        }
+    }
+
+    pub fn is_response_class(&self) -> bool {
+        match self {
+            Pdus::Response(_) | Pdus::Report(_) => true,
+            _ => false,
+        }
+    }
+
+    pub fn is_notification_class(&self) -> bool {
+        match self {
+            Pdus::Trap(_) | Pdus::InformRequest(_) => true,
+            _ => false,
+        }
+    }
+
+    pub fn is_internal_class(&self) -> bool {
+        match self {
+            Pdus::Report(_) => true,
+            _ => false,
+        }
+    }
+
+    pub fn is_confirmed_class(&self) -> bool {
+        match self {
+            Pdus::GetRequest(_)
+            | Pdus::GetNextRequest(_)
+            | Pdus::GetBulkRequest(_)
+            | Pdus::SetRequest(_)
+            | Pdus::InformRequest(_) => true,
+            _ => false,
+        }
+    }
+
+    pub fn is_unconfirmed_class(&self) -> bool {
+        match self {
+            Pdus::Report(_) | Pdus::Trap(_) | Pdus::Response(_) => true,
+            _ => false,
+        }
+    }
+}
+
 #[derive(AsnType, Debug, Clone, Decode, Encode, PartialEq, PartialOrd, Eq, Ord, Hash)]
 #[rasn(tag(0))]
 #[rasn(delegate)]
